@@ -1,6 +1,6 @@
 import os
-import anthropic
 import streamlit as st
+import google.generativeai as genai
 
 st.set_page_config(
     page_title="SmartStadium AI — FIFA World Cup 2026",
@@ -12,9 +12,10 @@ st.title("🏟️ SmartStadium AI — FIFA World Cup 2026")
 st.markdown("### GenAI-Powered Intelligent Stadium Operations Platform")
 st.markdown("---")
 
-client = anthropic.Anthropic(
-    api_key=os.environ.get("ANTHROPIC_API_KEY", "PASTE-YOUR-KEY-HERE")
+genai.configure(
+    api_key=os.environ.get("GEMINI_API_KEY", "PASTE-YOUR-KEY-HERE")
 )
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 FAN_PROMPT = """You are SmartStadium AI — official FIFA World Cup 2026
 stadium assistant. Help fans with:
@@ -50,21 +51,19 @@ with tab1:
             st.write(msg["content"])
 
     if prompt := st.chat_input("Ask SmartStadium AI... ⚽"):
-        st.session_state.fan_messages.append({"role": "user", "content": prompt})
+        st.session_state.fan_messages.append({
+            "role": "user", "content": prompt
+        })
         with st.chat_message("user"):
             st.write(prompt)
 
-        messages = [{"role": m["role"], "content": m["content"]}
-                   for m in st.session_state.fan_messages]
+        full_prompt = FAN_PROMPT + "\n\nFan question: " + prompt
+        response = model.generate_content(full_prompt)
+        reply = response.text
 
-        response = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=300,
-            system=FAN_PROMPT,
-            messages=messages
-        )
-        reply = response.content[0].text
-        st.session_state.fan_messages.append({"role": "assistant", "content": reply})
+        st.session_state.fan_messages.append({
+            "role": "assistant", "content": reply
+        })
         with st.chat_message("assistant"):
             st.write(reply)
 
@@ -80,18 +79,22 @@ with tab2:
             st.write(msg["content"])
 
     if prompt2 := st.chat_input("Ask Operations AI... 🎛️"):
-        st.session_state.staff_messages.append({"role": "user", "content": prompt2})
+        st.session_state.staff_messages.append({
+            "role": "user", "content": prompt2
+        })
         with st.chat_message("user"):
             st.write(prompt2)
 
-        messages2 = [{"role": m["role"], "content": m["content"]}
-                    for m in st.session_state.staff_messages]
+        full_prompt2 = STAFF_PROMPT + "\n\nStaff question: " + prompt2
+        response2 = model.generate_content(full_prompt2)
+        reply2 = response2.text
 
-        response2 = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=400,
-            system=STAFF_PROMPT,
-            messages=messages2
-        )
-        reply2 = response2.content[0].text
+        st.session_state.staff_messages.append({
+            "role": "assistant", "content": reply2
+        })
+        with st.chat_message("assistant"):
+            st.write(reply2)
+
+st.markdown("---")
+st.markdown("*Built for PromptWars 2026 | Smart Stadiums & Tournament Operations | Powered by Google Gemini AI 🤖*")
         st.session_state.staff_messages.append({"role": "assistant", "content": reply2})
