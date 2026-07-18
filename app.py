@@ -12,9 +12,7 @@ st.title("🏟️ SmartStadium AI — FIFA World Cup 2026")
 st.markdown("### GenAI-Powered Intelligent Stadium Operations Platform")
 st.markdown("---")
 
-genai.configure(
-    api_key=os.environ.get("GEMINI_API_KEY", "PASTE-YOUR-KEY-HERE")
-)
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY", "PASTE-KEY-HERE"))
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 FAN_PROMPT = """You are SmartStadium AI — official FIFA World Cup 2026
@@ -41,7 +39,7 @@ tab1, tab2 = st.tabs(["⚽ Fan Assistant", "🎛️ Staff & Operations"])
 
 with tab1:
     st.markdown("#### Your Personal Stadium Guide 🌍")
-    st.markdown("Ask me anything — navigation, food, schedules, emergencies!")
+    st.markdown("Ask anything — navigation, food, schedules, emergencies!")
 
     if "fan_messages" not in st.session_state:
         st.session_state.fan_messages = []
@@ -51,19 +49,13 @@ with tab1:
             st.write(msg["content"])
 
     if prompt := st.chat_input("Ask SmartStadium AI... ⚽"):
-        st.session_state.fan_messages.append({
-            "role": "user", "content": prompt
-        })
+        st.session_state.fan_messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.write(prompt)
-
         full_prompt = FAN_PROMPT + "\n\nFan question: " + prompt
         response = model.generate_content(full_prompt)
         reply = response.text
-
-        st.session_state.fan_messages.append({
-            "role": "assistant", "content": reply
-        })
+        st.session_state.fan_messages.append({"role": "assistant", "content": reply})
         with st.chat_message("assistant"):
             st.write(reply)
 
@@ -79,22 +71,15 @@ with tab2:
             st.write(msg["content"])
 
     if prompt2 := st.chat_input("Ask Operations AI... 🎛️"):
-        st.session_state.staff_messages.append({
-            "role": "user", "content": prompt2
-        })
+        st.session_state.staff_messages.append({"role": "user", "content": prompt2})
         with st.chat_message("user"):
             st.write(prompt2)
-
         full_prompt2 = STAFF_PROMPT + "\n\nStaff question: " + prompt2
         response2 = model.generate_content(full_prompt2)
         reply2 = response2.text
-
-        st.session_state.staff_messages.append({
-            "role": "assistant", "content": reply2
-        })
+        st.session_state.staff_messages.append({"role": "assistant", "content": reply2})
         with st.chat_message("assistant"):
             st.write(reply2)
 
 st.markdown("---")
 st.markdown("*Built for PromptWars 2026 | Smart Stadiums & Tournament Operations | Powered by Google Gemini AI 🤖*")
-        st.session_state.staff_messages.append({"role": "assistant", "content": reply2})
