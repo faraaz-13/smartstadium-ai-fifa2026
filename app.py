@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 
 st.set_page_config(
     page_title="SmartStadium AI — FIFA World Cup 2026",
@@ -12,8 +12,9 @@ st.title("🏟️ SmartStadium AI — FIFA World Cup 2026")
 st.markdown("### GenAI-Powered Intelligent Stadium Operations Platform")
 st.markdown("---")
 
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY", ))
-model = genai.GenerativeModel('gemini-1.0-pro')
+client = genai.Client(
+    api_key=os.environ.get("GEMINI_API_KEY", "")
+)
 
 FAN_PROMPT = """You are SmartStadium AI — official FIFA World Cup 2026
 stadium assistant. Help fans with:
@@ -53,7 +54,10 @@ with tab1:
         with st.chat_message("user"):
             st.write(prompt)
         full_prompt = FAN_PROMPT + "\n\nFan question: " + prompt
-        response = model.generate_content(full_prompt)
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=full_prompt
+        )
         reply = response.text
         st.session_state.fan_messages.append({"role": "assistant", "content": reply})
         with st.chat_message("assistant"):
@@ -75,7 +79,10 @@ with tab2:
         with st.chat_message("user"):
             st.write(prompt2)
         full_prompt2 = STAFF_PROMPT + "\n\nStaff question: " + prompt2
-        response2 = model.generate_content(full_prompt2)
+        response2 = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=full_prompt2
+        )
         reply2 = response2.text
         st.session_state.staff_messages.append({"role": "assistant", "content": reply2})
         with st.chat_message("assistant"):
