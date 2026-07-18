@@ -13,7 +13,7 @@ st.markdown("### GenAI-Powered Intelligent Stadium Operations Platform")
 st.markdown("---")
 
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY", ))
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-pro')
 
 FAN_PROMPT = """You are SmartStadium AI — official FIFA World Cup 2026
 stadium assistant. Help fans with:
