@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from google import genai
+import requests
 
 st.set_page_config(
     page_title="SmartStadium AI — FIFA World Cup 2026",
@@ -12,8 +12,7 @@ st.title("🏟️ SmartStadium AI — FIFA World Cup 2026")
 st.markdown("### GenAI-Powered Intelligent Stadium Operations Platform")
 st.markdown("---")
 
-GEMINI_API_KEY = "AIzaSy-AQ.Ab8RN6LVjWkAhcOIg6nD2Fu8rXahzQzIAJmZfSMMg1KCt7fc0g"
-client = genai.Client(api_key=GEMINI_API_KEY)
+API_KEY = st.secrets["OPENROUTER_API_KEY"]
 
 FAN_PROMPT = """You are SmartStadium AI — official FIFA World Cup 2026
 stadium assistant. Help fans with:
@@ -32,8 +31,24 @@ operations AI for staff, organizers and volunteers. Help with:
 - Emergency evacuation protocols
 - Volunteer deployment suggestions
 - Sustainability and waste management
-- Incident response decisions
 Be direct, professional, and prioritize safety."""
+
+def ask_ai(prompt, system):
+    response = requests.post(
+        "https://openrouter.ai/api/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {API_KEY}",
+            "Content-Type": "application/json"
+        },
+        json={
+            "model": "mistralai/mistral-7b-instruct:free",
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": prompt}
+            ]
+        }
+    )
+    return response.json()["choices"][0]["message"]["content"]
 
 tab1, tab2 = st.tabs(["⚽ Fan Assistant", "🎛️ Staff & Operations"])
 
@@ -49,16 +64,15 @@ with tab1:
             st.write(msg["content"])
 
     if prompt := st.chat_input("Ask SmartStadium AI... ⚽"):
-        st.session_state.fan_messages.append({"role": "user", "content": prompt})
+        st.session_state.fan_messages.append({
+            "role": "user", "content": prompt
+        })
         with st.chat_message("user"):
             st.write(prompt)
-        full_prompt = FAN_PROMPT + "\n\nFan question: " + prompt
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=full_prompt
-        )
-        reply = response.text
-        st.session_state.fan_messages.append({"role": "assistant", "content": reply})
+        reply = ask_ai(prompt, FAN_PROMPT)
+        st.session_state.fan_messages.append({
+            "role": "assistant", "content": reply
+        })
         with st.chat_message("assistant"):
             st.write(reply)
 
@@ -74,18 +88,17 @@ with tab2:
             st.write(msg["content"])
 
     if prompt2 := st.chat_input("Ask Operations AI... 🎛️"):
-        st.session_state.staff_messages.append({"role": "user", "content": prompt2})
+        st.session_state.staff_messages.append({
+            "role": "user", "content": prompt2
+        })
         with st.chat_message("user"):
             st.write(prompt2)
-        full_prompt2 = STAFF_PROMPT + "\n\nStaff question: " + prompt2
-        response2 = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=full_prompt2
-        )
-        reply2 = response2.text
-        st.session_state.staff_messages.append({"role": "assistant", "content": reply2})
+        reply2 = ask_ai(prompt2, STAFF_PROMPT)
+        st.session_state.staff_messages.append({
+            "role": "assistant", "content": reply2
+        })
         with st.chat_message("assistant"):
             st.write(reply2)
 
 st.markdown("---")
-st.markdown("*Built for PromptWars 2026 | Smart Stadiums & Tournament Operations | Powered by Google Gemini AI 🤖*")
+st.markdown("*Built for PromptWars 2026 | Smart Stadiums & Tournament Operations | Powered by AI 🤖*")
