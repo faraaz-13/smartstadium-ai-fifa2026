@@ -12,7 +12,7 @@ st.title("🏟️ SmartStadium AI — FIFA World Cup 2026")
 st.markdown("### GenAI-Powered Intelligent Stadium Operations Platform")
 st.markdown("---")
 
-API_KEY = st.secrets["OPENROUTER_API_KEY"]
+API_KEY = st.secrets["GROQ_API_KEY"]
 
 FAN_PROMPT = """You are SmartStadium AI — official FIFA World Cup 2026
 stadium assistant. Help fans with:
@@ -36,19 +36,18 @@ Be direct, professional, and prioritize safety."""
 def ask_ai(prompt, system):
     try:
         response = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
+            "https://api.groq.com/openai/v1/chat/completions",
             headers={
                 "Authorization": f"Bearer {API_KEY}",
-                "Content-Type": "application/json",
-                "HTTP-Referer": "https://smartstadium-ai.streamlit.app",
-                "X-Title": "SmartStadium AI"
+                "Content-Type": "application/json"
             },
             json={
-               "model": "openrouter/auto",
+                "model": "llama3-8b-8192",
                 "messages": [
                     {"role": "system", "content": system},
                     {"role": "user", "content": prompt}
-                ]
+                ],
+                "max_tokens": 300
             }
         )
         data = response.json()
@@ -58,6 +57,7 @@ def ask_ai(prompt, system):
             return f"Error: {data}"
     except Exception as e:
         return f"Error: {str(e)}"
+
 tab1, tab2 = st.tabs(["⚽ Fan Assistant", "🎛️ Staff & Operations"])
 
 with tab1:
@@ -109,4 +109,4 @@ with tab2:
             st.write(reply2)
 
 st.markdown("---")
-st.markdown("*Built for PromptWars 2026 | Smart Stadiums & Tournament Operations | Powered by AI 🤖*")
+st.markdown("*Built for PromptWars 2026 | Smart Stadiums & Tournament Operations | Powered by Groq AI 🤖*")
