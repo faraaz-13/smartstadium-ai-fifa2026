@@ -44,7 +44,7 @@ def ask_ai(prompt, system):
                 "X-Title": "SmartStadium AI"
             },
             json={
-                "model": "meta-llama/llama-3.2-3b-instruct:free",
+                "model": "google/gemma-3-4b-it:free",
                 "messages": [
                     {"role": "system", "content": system},
                     {"role": "user", "content": prompt}
