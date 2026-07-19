@@ -18,7 +18,7 @@ st.markdown("""
         text-align: center; margin-bottom: 24px;
         border: 1px solid rgba(255,255,255,0.1);
     }
-    .hero-title { font-size: 42px; font-weight: 700; color: white; margin-bottom: 8px; }
+    .hero-title { font-size: 42px; font-weight: 700; color: black; margin-bottom: 8px; }
     .hero-sub { font-size: 18px; color: rgba(255,255,255,0.6); margin-bottom: 24px; }
     .badge {
         display: inline-block; background: rgba(0,229,255,0.1);
