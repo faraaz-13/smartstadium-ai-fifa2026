@@ -42,7 +42,7 @@ def ask_ai(prompt, system):
                 "Content-Type": "application/json"
             },
             json={
-               "model": "llama-3.3-70b-versatile",,
+               "model": "llama-3.3-70b-versatile",
                 "messages": [
                     {"role": "system", "content": system},
                     {"role": "user", "content": prompt}
