@@ -35,7 +35,7 @@ st.markdown("""
         background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
         border-radius: 16px; padding: 20px; height: 100%;
     }
-    .feat-title { font-size: 16px; font-weight: 600; color: black; margin: 8px 0 4px; }
+    .feat-title { font-size: 16px; font-weight: 600; color: white; margin: 8px 0 4px; }
     .feat-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
     .stChatMessage { background: rgba(255,255,255,0.05) !important; border-radius: 12px !important; }
     .stChatInputContainer { background: rgba(255,255,255,0.05) !important; border-radius: 16px !important; }
