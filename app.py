@@ -34,22 +34,30 @@ operations AI for staff, organizers and volunteers. Help with:
 Be direct, professional, and prioritize safety."""
 
 def ask_ai(prompt, system):
-    response = requests.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json"
-        },
-        json={
-            "model": "mistralai/mistral-7b-instruct:free",
-            "messages": [
-                {"role": "system", "content": system},
-                {"role": "user", "content": prompt}
-            ]
-        }
-    )
-    return response.json()["choices"][0]["message"]["content"]
-
+    try:
+        response = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {API_KEY}",
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://smartstadium-ai.streamlit.app",
+                "X-Title": "SmartStadium AI"
+            },
+            json={
+                "model": "mistralai/mistral-7b-instruct:free",
+                "messages": [
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": prompt}
+                ]
+            }
+        )
+        data = response.json()
+        if "choices" in data:
+            return data["choices"][0]["message"]["content"]
+        else:
+            return f"Error: {data}"
+    except Exception as e:
+        return f"Error: {str(e)}"
 tab1, tab2 = st.tabs(["⚽ Fan Assistant", "🎛️ Staff & Operations"])
 
 with tab1:
