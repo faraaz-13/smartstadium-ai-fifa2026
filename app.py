@@ -12,9 +12,8 @@ st.title("🏟️ SmartStadium AI — FIFA World Cup 2026")
 st.markdown("### GenAI-Powered Intelligent Stadium Operations Platform")
 st.markdown("---")
 
-client = genai.Client(
-    api_key=os.environ.get("GEMINI_API_KEY", "")
-)
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 FAN_PROMPT = """You are SmartStadium AI — official FIFA World Cup 2026
 stadium assistant. Help fans with:
