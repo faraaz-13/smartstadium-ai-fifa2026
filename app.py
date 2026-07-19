@@ -44,7 +44,7 @@ def ask_ai(prompt, system):
                 "X-Title": "SmartStadium AI"
             },
             json={
-                "model": "google/gemma-3-4b-it:free",
+               "model": "openrouter/auto",
                 "messages": [
                     {"role": "system", "content": system},
                     {"role": "user", "content": prompt}
